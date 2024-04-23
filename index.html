@@ -190,6 +190,16 @@
 		.modal-wrapper .modal .main-wrapper .more-info-wrapper .more-info-toggle {
 			color: darkgray;
 			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.modal-wrapper .modal .main-wrapper .more-info-wrapper .more-info-toggle-icon {
+			color: darkgray;
+			cursor: pointer;
+			width: 1rem;
+			height: 1rem;
 		}
 
 		.modal-wrapper .modal .main-wrapper .more-info {
@@ -328,13 +338,26 @@
 						</div>
 
 						<div class="actions">
-							<a href="#">Open</a>
-							<a href="#">Copy</a>
+							<a href="#">Open URL</a>
+							<a href="#">Copy URL</a>
 							<a href="#">Report</a>
 						</div>
 
 						<div class="more-info-wrapper">
-							<p class="more-info-toggle">Click to show more information</p>
+							<div class="more-info-toggle">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 256 512"
+									fill="darkgray"
+									class="more-info-toggle-icon"
+								>
+									<!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+									<path
+										d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"
+									/>
+								</svg>
+								<p class="more-info-toggle-text">Show more information</p>
+							</div>
 							<p class="more-info">Nothing to show here.</p>
 						</div>
 					</div>
@@ -362,6 +385,7 @@
 			statusText.style.color = 'green';
 			modalWrapper.style.display = 'flex';
 			moreInfo.textContent = 'Nothing to show here.';
+			modal.style.border = '2px green solid';
 		});
 
 		badLink.addEventListener('click', e => {
@@ -372,6 +396,7 @@
 			modalWrapper.style.display = 'flex';
 			moreInfo.textContent =
 				'This is a Google Ads tracking and redirection link that points to a malicious website.';
+			modal.style.border = '2px red solid';
 		});
 
 		modalWrapper.addEventListener('click', e => {
@@ -382,8 +407,18 @@
 
 		moreInfoToggle.addEventListener('click', () => {
 			const moreInfo = document.querySelector('.more-info');
+			const moreInfoToggleIcon = document.querySelector('.more-info-toggle-icon');
+			const moreInfoToggleText = document.querySelector('.more-info-toggle-text');
 			moreInfo.style.display =
 				window.getComputedStyle(moreInfo, null).display === 'none' ? 'block' : 'none';
+			moreInfoToggleIcon.style.transform =
+				window.getComputedStyle(moreInfo, null).display === 'none'
+					? 'rotate(0deg)'
+					: 'rotate(90deg)';
+			moreInfoToggleText.textContent =
+				moreInfoToggleText.textContent === 'Show more information'
+					? 'Hide'
+					: 'Show more information';
 		});
 
 		settingsButton.addEventListener('click', toggleSettingsPage);
