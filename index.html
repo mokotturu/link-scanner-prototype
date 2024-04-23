@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Link Scanner</title>
+	</head>
+
+	<style>
+		* {
+			box-sizing: border-box;
+			padding: 0;
+			margin: 0;
+		}
+
+		body {
+			font-family: 'Segoe UI', sans-serif;
+		}
+
+		.button {
+			cursor: pointer;
+			color: white;
+			background-color: lightcoral;
+			border: 1px lightcoral solid;
+			padding: 0.5rem 1rem;
+			border-radius: 0.25rem;
+			transition: all 0.2s ease-in-out;
+		}
+
+		.button:hover {
+			background-color: initial;
+			color: initial;
+		}
+
+		nav {
+			background-color: lightcoral;
+			padding: 1rem;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 2rem;
+		}
+
+		nav ul {
+			display: flex;
+			list-style: none;
+			gap: 1rem;
+		}
+
+		nav ul li a {
+			text-decoration: none;
+			color: initial;
+		}
+
+		main {
+			padding: 2rem;
+		}
+
+		.email {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.email .links {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.email .actions {
+			display: flex;
+			gap: 1rem;
+			margin: 1rem 0;
+		}
+
+		.email .actions a {
+			text-decoration: none;
+			color: white;
+			background-color: lightcoral;
+			border: 1px lightcoral solid;
+			padding: 0.5rem 1rem;
+			border-radius: 0.25rem;
+			transition: all 0.2s ease-in-out;
+		}
+
+		.email .actions a:hover {
+			background-color: white;
+			color: black;
+		}
+
+		.modal-wrapper {
+			background-color: #00000050;
+			width: 100vw;
+			height: 100vh;
+			position: fixed;
+			top: 0;
+			left: 0;
+			display: none;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.modal-wrapper .modal {
+			background-color: white;
+			width: 50%;
+			border-radius: 0.5rem;
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			padding: 2rem;
+		}
+
+		.modal-wrapper .modal .title-wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.modal-wrapper .modal .title-wrapper .title {
+			font-size: 1.5rem;
+		}
+
+		.modal-wrapper .modal .title-wrapper .settings-button {
+			cursor: pointer;
+			width: 1rem;
+			height: 1rem;
+		}
+
+		.modal-wrapper .modal .title-wrapper .settings-button .settings-close-icon {
+			display: none;
+		}
+
+		.modal-wrapper .modal .main-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+		}
+
+		.modal-wrapper .modal .main-wrapper .link {
+			text-align: center;
+		}
+
+		.modal-wrapper .modal .main-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+		}
+
+		.modal-wrapper .modal .main-wrapper .status {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+
+		.modal-wrapper .modal .main-wrapper .status .status-text {
+			color: green;
+		}
+
+		.modal-wrapper .modal .main-wrapper .actions {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		.modal-wrapper .modal .main-wrapper .actions a {
+			text-decoration: none;
+			color: white;
+			background-color: lightcoral;
+			border: 1px lightcoral solid;
+			padding: 0.5rem 1rem;
+			border-radius: 0.25rem;
+			transition: all 0.2s ease-in-out;
+		}
+
+		.modal-wrapper .modal .main-wrapper .actions a:hover {
+			background-color: white;
+			color: initial;
+		}
+
+		.modal-wrapper .modal .main-wrapper .more-info-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.modal-wrapper .modal .main-wrapper .more-info-wrapper .more-info-toggle {
+			color: darkgray;
+			cursor: pointer;
+		}
+
+		.modal-wrapper .modal .main-wrapper .more-info {
+			display: none;
+			background-color: #f0f0f0;
+			padding: 1rem;
+			border-radius: 0.5rem;
+		}
+
+		.modal-wrapper .modal .settings-page-wrapper {
+			display: none;
+			flex-direction: column;
+			gap: 1rem;
+			background-color: #f0f0f0;
+			padding: 1rem;
+			border-radius: 0.5rem;
+		}
+
+		.modal-wrapper .modal .settings-page-wrapper .settings-items form {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.modal-wrapper .modal .settings-page-wrapper .settings-items .blocklist {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		textarea {
+			border-radius: 0.25rem;
+			max-width: 100%;
+		}
+	</style>
+
+	<body>
+		<nav>
+			<h1>E-mail</h1>
+
+			<ul>
+				<li><a href="#">Account</a></li>
+			</ul>
+		</nav>
+
+		<main>
+			<section class="email">
+				<h2 class="subject">Sending you legitimate links to click on</h2>
+
+				<p class="from">From: bot@totallyreal.net</p>
+				<p class="to">To: poor@victim.lol</p>
+
+				<p class="body">
+					Hi there, this is a test email. I am sending you some links to click on, and you
+					can click these links without any hesitation I promise it is not a malicious
+					trust me bro I am not a hakcer!!!!11!!
+				</p>
+
+				<div class="links">
+					<a id="good" href="#">Legitimate link here</a>
+					<a id="bad" href="#">Malicious link here</a>
+				</div>
+
+				<div class="actions">
+					<a href="#">Reply</a>
+					<a href="#">Reply All</a>
+					<a href="#">Forward</a>
+				</div>
+			</section>
+
+			<div class="modal-wrapper">
+				<div class="modal">
+					<div class="title-wrapper">
+						<h2 class="title">Link Scanner</h2>
+						<div class="settings-button">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 512 512"
+								fill="darkgray"
+								class="settings-button-icon"
+							>
+								<!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+								<path
+									d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+								/>
+							</svg>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 384 512"
+								fill="darkgray"
+								class="settings-close-icon"
+							>
+								<!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+								<path
+									d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+								/>
+							</svg>
+						</div>
+					</div>
+
+					<div class="settings-page-wrapper">
+						<div class="settings-items">
+							<form>
+								<div class="form-item">
+									<input
+										type="checkbox"
+										name="show-uri-parts"
+										id="show-uri-parts"
+									/>
+									<label for="show-uri-parts">Show URI parts</label>
+								</div>
+
+								<div class="form-item blocklist">
+									<label for="blocklist">Edit Blocklist</label>
+									<textarea name="blocklist" id="blocklist" rows="10"></textarea>
+								</div>
+
+								<div class="form-item">
+									<input
+										type="button"
+										value="Save"
+										class="button"
+										id="settings-save-button"
+									/>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<div class="main-wrapper">
+						<p class="link"></p>
+
+						<div class="status">
+							<p><strong>STATUS</strong></p>
+							<p class="status-text">Safe</p>
+						</div>
+
+						<div class="actions">
+							<a href="#">Open</a>
+							<a href="#">Copy</a>
+							<a href="#">Report</a>
+						</div>
+
+						<div class="more-info-wrapper">
+							<p class="more-info-toggle">Click to show more information</p>
+							<p class="more-info">Nothing to show here.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+
+	<script>
+		const goodLink = document.getElementById('good');
+		const badLink = document.getElementById('bad');
+		const modalWrapper = document.querySelector('.modal-wrapper');
+		const modal = document.querySelector('.modal');
+		const link = document.querySelector('.link');
+		const statusText = document.querySelector('.status-text');
+		const moreInfoToggle = document.querySelector('.more-info-toggle');
+		const moreInfo = document.querySelector('.more-info');
+		const settingsButton = document.querySelector('.settings-button');
+		const settingsSaveButton = document.querySelector('#settings-save-button');
+
+		goodLink.addEventListener('click', e => {
+			e.preventDefault();
+			link.textContent = `https://youtu.be/dQw4w9WgXcQ`;
+			statusText.textContent = 'Safe';
+			statusText.style.color = 'green';
+			modalWrapper.style.display = 'flex';
+			moreInfo.textContent = 'Nothing to show here.';
+		});
+
+		badLink.addEventListener('click', e => {
+			e.preventDefault();
+			link.textContent = `https://googleads.g.doubleclick.net/aclk?sa=L&ai=CkKhf7ybY89J&adurl=//tinyurl%2ecom/stG7?anZm`;
+			statusText.textContent = 'Unsafe';
+			statusText.style.color = 'red';
+			modalWrapper.style.display = 'flex';
+			moreInfo.textContent =
+				'This is a Google Ads tracking and redirection link that points to a malicious website.';
+		});
+
+		modalWrapper.addEventListener('click', e => {
+			if (e.target === modalWrapper) {
+				modalWrapper.style.display = 'none';
+			}
+		});
+
+		moreInfoToggle.addEventListener('click', () => {
+			const moreInfo = document.querySelector('.more-info');
+			moreInfo.style.display =
+				window.getComputedStyle(moreInfo, null).display === 'none' ? 'block' : 'none';
+		});
+
+		settingsButton.addEventListener('click', toggleSettingsPage);
+		settingsSaveButton.addEventListener('click', toggleSettingsPage);
+
+		function toggleSettingsPage() {
+			const settingsPage = document.querySelector('.settings-page-wrapper');
+			const mainWrapper = document.querySelector('.main-wrapper');
+			const title = document.querySelector('.title');
+			const settingsButton = document.querySelector('.settings-button');
+			settingsPage.style.display =
+				window.getComputedStyle(settingsPage, null).display === 'none' ? 'flex' : 'none';
+			mainWrapper.style.display =
+				window.getComputedStyle(mainWrapper, null).display === 'none' ? 'flex' : 'none';
+			title.textContent = title.textContent === 'Link Scanner' ? 'Settings' : 'Link Scanner';
+			settingsButton.querySelector('.settings-button-icon').style.display =
+				window.getComputedStyle(settingsButton.querySelector('.settings-button-icon'), null)
+					.display === 'none'
+					? 'block'
+					: 'none';
+			settingsButton.querySelector('.settings-close-icon').style.display =
+				window.getComputedStyle(settingsButton.querySelector('.settings-close-icon'), null)
+					.display === 'none'
+					? 'block'
+					: 'none';
+		}
+	</script>
+</html>
